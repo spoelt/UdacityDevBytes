@@ -55,18 +55,22 @@ class DevByteViewModel(application: Application) : AndroidViewModel(application)
      */
     private val viewModelScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
+    // Define a database variable and assign it to getDatabase(), passing the application.
     private val database = getDatabase(application)
+    // Define val videosRepository and assign it to a VideosRepository using the database singleton
     private val videosRepository = VideosRepository(database)
 
     /**
      * init{} is called immediately when this ViewModel is created.
      */
+    // Create an init block and launch a coroutine to call videosRepository.refreshVideos()
     init {
         viewModelScope.launch {
             videosRepository.refreshVideos()
         }
     }
 
+    // Get videos LiveData from the repository and assign it to a playlist variable
     val playlist = videosRepository.videos
 
     /**

@@ -32,6 +32,7 @@ class VideosRepository(private val database: VideosDatabase) {
     /**
      * A playlist of videos that can be shown on the screen.
      */
+    // Use Transformation.map to convert your LiveData list of DatabaseVideo objects to domain Video objects
     val videos: LiveData<List<Video>> =
             Transformations.map(database.videoDao.getVideos()) {
         it.asDomainModel()
@@ -46,10 +47,15 @@ class VideosRepository(private val database: VideosDatabase) {
      *
      * To actually load the videos for use, observe [videos]
      */
+    // Make it a suspend function since it will be called from a coroutine
     suspend fun refreshVideos() {
+        // call withContext(Dispatchers.IO) to force the Kotlin coroutine to switch to the IO dispatcher
         withContext(Dispatchers.IO) {
+            // make a network call to getPlaylist(), and use the await() function to tell the coroutine
+            // to suspend until the data is available. Then call insertAll() to insert the playlist into the database
             val playlist = Network.devbytes.getPlaylist().await()
             database.videoDao.insertAll(*playlist.asDatabaseModel())
+            // Note the asterisk * is the spread operator. It allows you to pass in an array to a function that expects varargs.
         }
     }
 }

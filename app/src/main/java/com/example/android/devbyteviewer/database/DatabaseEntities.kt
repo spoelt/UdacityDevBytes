@@ -21,6 +21,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.example.android.devbyteviewer.domain.Video
 
+// Create the DatabaseVideo database object
 @Entity
 data class DatabaseVideo constructor(
         @PrimaryKey
@@ -30,6 +31,7 @@ data class DatabaseVideo constructor(
         val description: String,
         val thumbnail: String)
 
+// Add an extension function which converts from database objects to domain objects:
 fun List<DatabaseVideo>.asDomainModel(): List<Video> {
     return map {
         Video(

@@ -65,6 +65,7 @@ fun NetworkVideoContainer.asDomainModel(): List<Video> {
     }
 }
 
+// Create an extension function that converts from data transfer objects to database objects
 fun NetworkVideoContainer.asDatabaseModel(): Array<DatabaseVideo> {
     return videos.map {
         DatabaseVideo(
